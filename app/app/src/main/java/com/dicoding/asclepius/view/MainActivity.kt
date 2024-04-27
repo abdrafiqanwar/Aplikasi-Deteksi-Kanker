@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
@@ -15,12 +16,11 @@ class MainActivity : AppCompatActivity() {
 
     private var currentImageUri: Uri? = null
 
-    private val resultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
+    private val launcherGallery = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
     ) {
-        if (it.resultCode == RESULT_OK){
-            val data = it.data
-            currentImageUri = data?.data
+        if (it != null) {
+            currentImageUri = it
             showImage()
         }
     }
@@ -30,16 +30,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.galleryButton.setOnClickListener{
-            startGallery()
-        }
+        binding.galleryButton.setOnClickListener { startGallery() }
     }
 
     private fun startGallery() {
         // TODO: Mendapatkan gambar dari Gallery.
-        val pickImage = Intent(Intent.ACTION_PICK)
-        pickImage.setType("image/*")
-        resultLauncher.launch(pickImage)
+        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
     private fun showImage() {
