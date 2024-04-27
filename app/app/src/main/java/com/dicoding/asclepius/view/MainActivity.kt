@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
 
@@ -14,17 +15,36 @@ class MainActivity : AppCompatActivity() {
 
     private var currentImageUri: Uri? = null
 
+    private val resultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK){
+            val data = it.data
+            currentImageUri = data?.data
+            showImage()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.galleryButton.setOnClickListener{
+            startGallery()
+        }
     }
 
     private fun startGallery() {
         // TODO: Mendapatkan gambar dari Gallery.
+        val pickImage = Intent(Intent.ACTION_PICK)
+        pickImage.setType("image/*")
+        resultLauncher.launch(pickImage)
     }
 
     private fun showImage() {
         // TODO: Menampilkan gambar sesuai Gallery yang dipilih.
+        binding.previewImageView.setImageURI(currentImageUri)
     }
 
     private fun analyzeImage() {
