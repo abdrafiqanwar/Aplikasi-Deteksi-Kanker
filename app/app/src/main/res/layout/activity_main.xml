@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".view.MainActivity">
 
     <ImageView
@@ -22,7 +21,8 @@
         android:text="@string/gallery"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="12dp"
-        android:backgroundTint="@color/blue"/>
+        android:backgroundTint="@color/blue"
+        android:layout_below="@id/previewImageView"/>
 
     <Button
         android:id="@+id/analyzeButton"
@@ -31,6 +31,14 @@
         android:text="@string/analyze"
         android:visibility="gone"
         android:layout_marginHorizontal="20dp"
-        android:backgroundTint="@color/blue" />
+        android:backgroundTint="@color/blue"
+        android:layout_below="@id/galleryButton"/>
 
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/menu"/>
+
+</RelativeLayout>
