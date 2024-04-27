@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +21,9 @@ class MainActivity : AppCompatActivity() {
         if (it != null) {
             currentImageUri = it
             showImage()
+            binding.analyzeButton.visibility = View.VISIBLE
+        } else {
+            binding.analyzeButton.visibility = View.GONE
         }
     }
 
