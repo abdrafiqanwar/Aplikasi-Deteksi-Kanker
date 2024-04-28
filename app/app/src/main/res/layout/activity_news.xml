@@ -5,16 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.HistoryActivity">
+    tools:context=".view.NewsActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_history"
+        android:id="@+id/rv_news"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:layout_above="@+id/bottom_nav"
-        android:layout_alignParentTop="true"
-        tools:listitem="@layout/item_history"/>
+        tools:listitem="@layout/item_news"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"

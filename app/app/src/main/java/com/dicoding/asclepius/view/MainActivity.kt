@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
+                R.id.news -> {
+                    val intent = Intent(this, NewsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
                 R.id.history -> {
                     val intent = Intent(this, HistoryActivity::class.java)
                     startActivity(intent)

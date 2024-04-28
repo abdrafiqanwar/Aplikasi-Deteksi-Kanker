@@ -9,23 +9,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.asclepius.R
-import com.dicoding.asclepius.adapter.HistoryAdapter
-import com.dicoding.asclepius.database.HistoryRoomDatabase
-import com.dicoding.asclepius.databinding.ActivityHistoryBinding
-import com.dicoding.asclepius.viewModel.HistoryViewModel
-import com.dicoding.asclepius.viewModel.ViewModelFactory
+import com.dicoding.asclepius.adapter.NewsAdapter
+import com.dicoding.asclepius.databinding.ActivityNewsBinding
+import com.dicoding.asclepius.response.ArticlesItem
+import com.dicoding.asclepius.viewModel.NewsViewModel
 
-class HistoryActivity : AppCompatActivity() {
+class NewsActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHistoryBinding
-    private val historyViewModel by viewModels<HistoryViewModel>() {
-        ViewModelFactory.getInstance(application)
-    }
+    private lateinit var binding: ActivityNewsBinding
+    private val newsViewModel by viewModels<NewsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityHistoryBinding.inflate(layoutInflater)
+        binding = ActivityNewsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -33,7 +30,7 @@ class HistoryActivity : AppCompatActivity() {
             insets
         }
 
-        binding.bottomNav.selectedItemId = R.id.history
+        binding.bottomNav.selectedItemId = R.id.news
 
         binding.bottomNav.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -56,16 +53,15 @@ class HistoryActivity : AppCompatActivity() {
             }
         }
 
-        historyViewModel.getAllHistory().observe(this) {
-            val adapter = HistoryAdapter(it)
-            binding.rvHistory.adapter = adapter
+        newsViewModel.listNews.observe(this){
+            setNews(it)
         }
 
-//        val database = HistoryRoomDatabase.getDatabase(this)
-//        val listHistory = database.historyDao().getAllHistory()
-//        val adapter = HistoryAdapter(listHistory)
+        binding.rvNews.layoutManager = LinearLayoutManager(this)
+    }
 
-        binding.rvHistory.layoutManager = LinearLayoutManager(this)
-//        binding.rvHistory.adapter = adapter
+    private fun setNews(news: List<ArticlesItem>){
+        val adapter = NewsAdapter(news)
+        binding.rvNews.adapter = adapter
     }
 }
