@@ -4,14 +4,24 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
+import com.dicoding.asclepius.database.History
+import com.dicoding.asclepius.database.HistoryRoomDatabase
 import com.dicoding.asclepius.databinding.ActivityResultBinding
 import com.dicoding.asclepius.helper.ImageClassifierHelper
+import com.dicoding.asclepius.viewModel.HistoryViewModel
+import com.dicoding.asclepius.viewModel.ViewModelFactory
 import org.tensorflow.lite.task.vision.classifier.Classifications
 import java.text.NumberFormat
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
     private lateinit var imageClassifierHelper: ImageClassifierHelper
+
+    private val historyViewModel by viewModels<HistoryViewModel>() {
+        ViewModelFactory.getInstance(application)
+    }
+    private var history: History? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +32,8 @@ class ResultActivity : AppCompatActivity() {
         val image = intent.getStringExtra(EXTRA_IMAGE_URI)
         val imageUri = Uri.parse(image)
         binding.resultImage.setImageURI(imageUri)
+
+        var displayResult = ""
 
         imageClassifierHelper = ImageClassifierHelper(
             context = this,
@@ -39,7 +51,7 @@ class ResultActivity : AppCompatActivity() {
                                 println(it)
                                 val sortedCategories =
                                     it[0].categories.sortedByDescending { it?.score }
-                                val displayResult =
+                                displayResult =
                                     sortedCategories.joinToString("\n") {
                                         "${it.label} " + NumberFormat.getPercentInstance()
                                             .format(it.score).trim()
@@ -54,6 +66,20 @@ class ResultActivity : AppCompatActivity() {
             }
         )
         imageClassifierHelper.classifyStaticImage(imageUri)
+
+        if(history == null){
+            history = History()
+        }
+
+        history.let {
+            it?.image = imageUri.toString()
+            it?.result = displayResult
+        }
+
+        historyViewModel.insert(history as History)
+
+//        val database = HistoryRoomDatabase.getDatabase(this)
+//        database.historyDao().insert(history as History)
     }
 
     companion object {
